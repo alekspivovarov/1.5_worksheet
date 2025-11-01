@@ -38,7 +38,7 @@ Your code will only be tested on valid files in the format shown in the 4 exampl
 
 import csv 
 
-def classify(avg: float) -> str:
+def classify(avg: float) -> str: # turns student average mark into degree classification
     if avg >= 70:
         return "1"
     elif avg >= 60:
@@ -80,12 +80,12 @@ with open(in_name, newline="", encoding="utf-8-sig") as fin, \
 
     next(reader, None)
 
-    for row in reader:
+    for row in reader: # loops over each remaining CSV row
         if not row:
-            continue
-        student_id = row[0].strip()
-        grades = parse_grades(row[1:])
+            continue # skips completely empty rows
+        student_id = row[0].strip() # takes the first column as the student ID, trims the spaces
+        grades = parse_grades(row[1:]) # converts the remaining columns into integers, ignoring blanks
         avg = sum(grades) / len(grades)
-        writer.writerow([student_id, f"{avg:.2f}", classify(avg)])
+        writer.writerow([student_id, f"{avg:.2f}", classify(avg)]) # writes one output row in the exact required format
 
 print(f"Wrote {out_name}")
