@@ -15,13 +15,19 @@ Students can have between 1 - 12 modules, for example:
 203742,55,97,57,37,76,68,,,,,, # 6 modules
 You should ensure that you consider the number of modules when calculating your mean.
 
+
 Your code needs to:
 - ask for the filename of the student file
+
 - read in the data, and for each student calculate their average grade and classification
+
+
 - write out this calculated data in the format:
      student_id,average_grade,classification
      The average grade should be given to 2 decimal places
      this can be achieved by using the following in an fstring: {variable_name:.2f}
+
+
 - write this data out to a file named input_file_name + _out.csv - e.g. the input file name 'student_data.csv' -> 'student_data.csv_out.csv'
 
 Your output files must be structured exactly as described - output files for all the test files have been provided so you can compare and ensure they are identical.
@@ -29,3 +35,57 @@ Your output files must be structured exactly as described - output files for all
 Note:
 Your code will only be tested on valid files in the format shown in the 4 example files in this folder - you do not need to validate any data.
 '''
+
+import csv 
+
+def classify(avg: float) -> str:
+    if avg >= 70:
+        return "1"
+    elif avg >= 60:
+        return "2:1"
+    elif avg >= 50:
+        return "2:2"
+    elif avg >= 40:
+        return "3"
+    else:
+        return "F"
+    
+def parse_grades(fields): # Turn non-empty fields into integers; ignore blanks
+    grades = []
+    for g in fields:
+        g = g.strip()
+        if g != "":
+            grades.append(int(g))
+    return grades
+
+# - ask for the filename of the student file
+
+in_name = input("Enter input CSV filename: ").strip()
+out_name = f"{in_name}_out.csv"
+    
+
+
+#- read in the data, and for each student calculate their average grade and classification
+
+#- write out this calculated data in the format:
+#     student_id,average_grade,classification
+#     The average grade should be given to 2 decimal places
+#     this can be achieved by using the following in an fstring: {variable_name:.2f}
+
+with open(in_name, newline="", encoding="utf-8-sig") as fin, \
+     open(out_name, "w", newline="", encoding="utf-8") as fout:
+    
+    reader = csv.reader(fin)
+    writer = csv.writer(fout)
+
+    next(reader, None)
+
+    for row in reader:
+        if not row:
+            continue
+        student_id = row[0].strip()
+        grades = parse_grades(row[1:])
+        avg = sum(grades) / len(grades)
+        writer.writerow([student_id, f"{avg:.2f}", classify(avg)])
+
+print(f"Wrote {out_name}")
